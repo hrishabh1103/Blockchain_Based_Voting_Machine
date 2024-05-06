@@ -17,7 +17,8 @@ router.post('/adlogin', function(req, res){
 
     if(emailAddress === 'admin@cseds.co' && password === 'admin') {
         req.session.isAdmin = true;
-        res.redirect('/adminDashboard');
+        req.session.emailAddress= emailAddress;
+        res.redirect('/addCandidate');
         return;
     }
 
