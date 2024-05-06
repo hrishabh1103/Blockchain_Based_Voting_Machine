@@ -1,19 +1,19 @@
-import express from 'express';
+var express = require('express');
 
-const router = express.Router();
-import db from '../database';
-
-express.static('public');
-express.static(__dirname + 'public/css');
-
+var router = express.Router();
+var db=require('../database');
+var app = express();
+app.use(express.static('public'))
+app.use('/css',express.static(__dirname + 'public/css'))
 /* GET users listing. */
-router.get('/adlogin', function(req, res) {
+router.get('/adlogin', function(req, res, next) {
   res.render('admin_login.ejs');
 });
 
+
 router.post('/adlogin', function(req, res){
-    const emailAddress = req.body.email_address;
-    const password = req.body.password;
+    var emailAddress = req.body.email_address;
+    var password = req.body.password;
 
     if(emailAddress === 'admin@cseds.co' && password === 'admin') {
         req.session.isAdmin = true;
@@ -21,8 +21,8 @@ router.post('/adlogin', function(req, res){
         return;
     }
 
-    const sql='SELECT * FROM registration WHERE email_address =? AND password =?';
-    db.query(sql, [emailAddress, password], function (err, data) {
+    var sql='SELECT * FROM registration WHERE email_address =? AND password =?';
+    db.query(sql, [emailAddress, password], function (err, data, fields) {
         if(err) throw err
         if(data.length>0){
             req.session.loggedinUser= true;
